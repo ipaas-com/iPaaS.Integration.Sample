@@ -1,4 +1,4 @@
-# iPaaS.com Integration Sample
+# iPaaS.com Integration Sample (Coming Soon)
 
 This project contains examples of how to implement methods throughout your new Integration.  It should be used for reference only.
 
