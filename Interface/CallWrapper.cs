@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
 using static Integration.Constants;
 
-namespace FakeStore.Data.Interface
+namespace Integration.Data.Interface
 {
     [DataContract]
     public class CallWrapper : Integration.Abstract.CallWrapper
@@ -41,7 +41,7 @@ namespace FakeStore.Data.Interface
             _integrationClient = new RestClient(_integrationSettings.Url);
             _integrationClient.AddDefaultHeader("Content-Type", "application/json");
             _integrationClient.AddDefaultHeader("Accept", "application/json");
-            _integrationClient.UseSerializer(() => new Integration.Data.Utilities.RestSharpNewtonsoftSerializer());
+            _integrationClient.UseSerializer(() => new Utilities.RestSharpNewtonsoftSerializer());
 
             string ValidationResponse = await ValidateConnection();
 
@@ -69,9 +69,8 @@ namespace FakeStore.Data.Interface
         public async Task<string> ValidateConnection()
         {
             //To test connectivity, we just request Helloworld or some lightweight equivalent end-point from the 3rd party API.
-            RestSharp.RestRequest req = new RestSharp.RestRequest("/products/1", RestSharp.Method.Get);
-            //Authorization is not required
-            //req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _integrationSettings.APIUser, _integrationSettings.APIPassword)))));
+            RestSharp.RestRequest req = new RestSharp.RestRequest("/v1/helloworld", RestSharp.Method.Get);
+            req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _integrationSettings.APIUser, _integrationSettings.APIPassword)))));
             RestResponse resp = (RestResponse)await _integrationClient.ExecuteAsync(req);
 
             string ResponseVal = "";
@@ -88,7 +87,7 @@ namespace FakeStore.Data.Interface
                 return "Success";
             }
 
-            return "Unknown Issue unning ValidateConnection";
+            return "Unknown Issue Executing ValidateConnection";
         }
     }
 }

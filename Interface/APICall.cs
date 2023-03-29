@@ -10,7 +10,7 @@ using static Integration.Constants;
 using Integration;
 using Integration.DataModels;
 
-namespace FakeStore.Data.Interface
+namespace Integration.Data.Interface
 {
     class APICall
     {
@@ -116,8 +116,7 @@ namespace FakeStore.Data.Interface
         {
             RestSharp.RestRequest req = new RestRequest(url, Method.Get);
             req.RequestFormat = DataFormat.Json;
-            //FakeStore does not require authorization
-            //req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", this._connection.Settings.APIUser, this._connection.Settings.APIPassword)))));
+            req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", this._connection.Settings.APIUser, this._connection.Settings.APIPassword)))));
             lastRestRequestCreateDT = DateTime.Now;
             return req;
         }
@@ -238,8 +237,23 @@ namespace FakeStore.Data.Interface
 
                 foreach (var param in request.Parameters)
                 {
+                    string paramValueStr;
+                    if (param.Type == ParameterType.RequestBody)
+                    {
+                        try
+                        {
+                            paramValueStr = JsonConvert.SerializeObject(param.Value, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+                        }
+                        catch
+                        {
+                            paramValueStr = "Unable to serialize: " + Convert.ToString(param.Value);
+                        }
+                    }
+                    else
+                        paramValueStr = Convert.ToString(param.Value);
+
                     if (param.Name != "Authorization" && param.Name != "Content-Type" && param.Name != "Content_Type" && param.Name != "Accept" && param.Name != "Basic")
-                        _connection.Logger.Log_Technical(logSeverity, string.Format("{0} CallWrapper.{1}:RestReqeuest", Identity.AppName, action), string.Format("Parameter: {0}={1}", param.Name, param.Value));
+                        _connection.Logger.Log_Technical(logSeverity, string.Format("{0} CallWrapper.{1}:RestReqeuest", Identity.AppName, action), string.Format("Parameter: {0}={1}", param.Name, paramValueStr));
                 }
             }
         }
