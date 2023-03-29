@@ -96,20 +96,20 @@ Since I didn't need it anymore, I also deleted the initial system I had created.
 
 Now that I have a valid system, I could run my DevelopmentTests. In my case, my system was created with ID 10684, so I could run these commands and confirm that they executed without errros:
 
-TEST Product_Get 10684
-TEST Product_Update 10684
-TEST Product_Create 10684
-TEST Product_Delete 10684
+> TEST Product_Get 10684
+> TEST Product_Update 10684
+> TEST Product_Create 10684
+> TEST Product_Delete 10684
 
-TEST User_Get 10684
-TEST User_Update 10684
-TEST User_Create 10684
-TEST User_Delete 10684
+> TEST User_Get 10684
+> TEST User_Update 10684
+> TEST User_Create 10684
+> TEST User_Delete 10684
 
-TEST Cart_Get 10684
-TEST Cart_Update 10684
-TEST Cart_Create 10684
-TEST Cart_Delete 10684
+> TEST Cart_Get 10684
+> TEST Cart_Update 10684
+> TEST Cart_Create 10684
+> TEST Cart_Delete 10684
 
 In my case, I did find a few errors. So I corrected them and uploaded a fresh file.
 
@@ -145,15 +145,16 @@ Finally, I defined a mapping for Transaction Lines. The Type and Status fields a
 ### Testing Hooks
 Now that I had my file complete and my mappings in place, I decided to test some data transfers. First I ran some products, using this command in the Development Utility:
 
-HOOK 10684 product/created 1 TO
-HOOK 10684 product/created 2 TO
-HOOK 10684 product/created 3 TO
+> HOOK 10684 product/created 1 TO
+> HOOK 10684 product/created 2 TO
+> HOOK 10684 product/created 3 TO
 
 This told iPaaS that I wanted to send products 1, 2, and 3 in system 10684 TO iPaaS with the scope product/created. I reviewed the items in iPaaS and confirmed that the data I expected there was present.
 
 Then I sent hooks to test customers and transactions:
-HOOK 10684 customer/created 1 TO
-HOOK 10684 transaction/created 1 TO
+
+> HOOK 10684 customer/created 1 TO
+> HOOK 10684 transaction/created 1 TO
 
 Once I confirmed that those hooks worked correctly, I was done.
 
