@@ -10,7 +10,7 @@ using static Integration.Constants;
 using Integration;
 using Integration.DataModels;
 
-namespace Integration.Data.Interface
+namespace FakeStore.Data.Interface
 {
     class APICall
     {
@@ -116,7 +116,8 @@ namespace Integration.Data.Interface
         {
             RestSharp.RestRequest req = new RestRequest(url, Method.Get);
             req.RequestFormat = DataFormat.Json;
-            req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", this._connection.Settings.APIUser, this._connection.Settings.APIPassword)))));
+            //FakeStore does not require authorization
+            //req.AddHeader("Authorization", string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", this._connection.Settings.APIUser, this._connection.Settings.APIPassword)))));
             lastRestRequestCreateDT = DateTime.Now;
             return req;
         }

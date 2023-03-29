@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FakeStore.Data.Models;
 using Newtonsoft.Json;
 
-namespace Integration.Data.Interface
+namespace FakeStore.Data.Interface
 {
     public class DevelopmentTests
     {
@@ -16,128 +17,181 @@ namespace Integration.Data.Interface
 
             // Test with successful and invalid credentials.
             // Are you handling Error responses correctly?
+            Console.WriteLine($"Connection validation response {response}");
         }
 
-        // Example development test running from your DataModel events
-        public static async Task Integration_Template_FromiPaaS_Create(Integration.Abstract.Connection connection)
+        #region Product CRUD tests
+
+        public static async Task Product_Get(Integration.Abstract.Connection connection)
         {
             var conn = (Connection)connection;
             var wrapper = conn.CallWrapper;
 
-            DataModels.Template DevTest1 = new DataModels.Template();
-            DevTest1.Id = 19;
-            // set other properties for DevTest1
-            // set your debug breakpoints in here and step through after executing your DevelopmentTest
+            var iProduct = new Product();
+            var product = (Product)await iProduct.Get(wrapper, 5);
 
-            var response = await DevTest1.Create(wrapper);
-            
-            // Check your response status.  Did everything go OK?
+            if (product != null)
+                Console.WriteLine($"Retrieved product {product.Title}");
+            else
+                Console.WriteLine($"Failed to retrieve product");
         }
 
-        /*
-         * 
-        // Example Development Test Structure for Certification
-        // Name should be the IntegrationName_MappingCollectionType_Direction_EventType
-        public static async Task MeetHue_Transaction_FromiPaaS_Update(Integration.Abstract.Connection connection)
+        public static async Task Product_Update(Integration.Abstract.Connection connection)
         {
-            // Below is a Test Scenario to turn on a Phillips Hue Light named "Mood Light"
             var conn = (Connection)connection;
             var wrapper = conn.CallWrapper;
 
-            // Development Tests should start with datamodels that were registered in Interface.Metadata
-            // Each field in the subscription mappings for this integration should be represented below setting a value to the corresponding property.
-            DataModels.HueAction TestLightAction = new DataModels.HueAction();
+            var iProduct = new Product();
+            var product = (Product)await iProduct.Get(wrapper, 5);
 
-            // Highlights of the test
-            // 1) Demonstrate how a Built-In Conversion function can be applied in the mappings
+            if (product != null)
+                Console.WriteLine($"Retrieved product {product.Title}");
+            else
+                Console.WriteLine($"Failed to retrieve product");
 
-            TestLightAction.EventType = DataModels.EventType.Light;
-            TestLightAction.SearchName = "Mood Light";
-            TestLightAction.LightState = ConversionFunctions.FlashRed();
+            var oldPrice = product.Price;
+            product.Price = product.Price + .01M;
 
-            await TestLightAction.Update(wrapper);
+            var newProduct = (Product)await product.Update(wrapper);
 
-            // In Comments: Describe the expected outcome and how it can be evidenced
-            // The light on my Hue Account named "Mood Light" will have a changed lightstate. 
-            // This can be evidenced by camera or by accessing the MeetHue API using the subscription credentials directly.
-            // To access it directly, we will make a call to https://api.meethue.com/bridge/{{bridge}}/lights
-            // and verify the response.  The response should look like the following.  "Mood Light" is "3" and state.on will equal true afterwards.
-
-            //"3": {
-            //    "state": {
-            //        "on": true,
-            //        "bri": 254,
-            //        "hue": 63252,
-            //        "sat": 249,
-            //        "effect": "none",
-            //        "xy": [
-            //            0.6616,
-            //            0.2828
-            //                ],
-            //        "alert": "lselect",
-            //        "colormode": "hs",
-            //        "mode": "homeautomation",
-            //        "reachable": true
-            //            },
-            //    "swupdate": {
-            //                "state": "noupdates",
-            //        "lastinstall": "2021-10-22T18:36:44"
-            //    },
-            //    "type": "Color light",
-            //    "name": "Mood Light",
-            //    "modelid": "LLC011",
-            //    "manufacturername": "Signify Netherlands B.V.",
-            //    "productname": "Hue bloom",
-            //    "capabilities": {
-            //                "certified": true,
-            //        "control": {
-            //                    "mindimlevel": 10000,
-            //            "maxlumen": 120,
-            //            "colorgamuttype": "A",
-            //            "colorgamut": [
-            //                [
-            //                    0.704,
-            //                    0.296
-            //                ],
-            //                [
-            //                    0.2151,
-            //                    0.7106
-            //                ],
-            //                [
-            //                    0.138,
-            //                    0.08
-            //                ]
-            //            ]
-            //        },
-            //        "streaming": {
-            //                    "renderer": true,
-            //            "proxy": false
-            //        }
-            //            },
-            //    "config": {
-            //                "archetype": "huebloom",
-            //        "function": "decorative",
-            //        "direction": "upwards",
-            //        "startup": {
-            //                    "mode": "custom",
-            //            "configured": true,
-            //            "customsettings": {
-            //                        "bri": 254,
-            //                "xy": [
-            //                    0.202,
-            //                    0.5619
-            //                ]
-            //            }
-            //                }
-            //            },
-            //    "uniqueid": "00:17:88:01:00:1c:76:4a-0b",
-            //    "swversion": "67.91.1"
-            //}
-
+            Console.WriteLine($"Updated product price from {oldPrice} to {newProduct.Price}");
         }
-        */
 
+        public static async Task Product_Create(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var product = new Product();
+            product.Title = "Adams Tight Lies 2 Wood";
+            product.Price = 348.99M;
+            product.Description = "Adams Tight Lies 2 Wood";
+            product.Category = "electronics";
+
+            var newProduct = (Product)await product.Create(wrapper);
+
+            Console.WriteLine($"Created product with ID {newProduct.Id}");
+        }
+
+        public static async Task Product_Delete(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var iProduct = new Product();
+            await iProduct.Delete(wrapper, 5);
+
+            Console.WriteLine($"Delete product with ID 5");
+        }
+        #endregion
+
+        #region Cart CRUD tests
+        public static async Task Cart_Get(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var iCart = new Cart();
+            var cart = (Cart)await iCart.Get(wrapper, 5);
+
+            if (cart != null)
+                Console.WriteLine($"Retrieved cart {cart.Id}");
+            else
+                Console.WriteLine($"Failed to retrieve cart");
+        }
+
+        public static async Task Cart_Update(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var iCart = new Cart();
+            var cart = (Cart)await iCart.Get(wrapper, 5);
+            if (cart != null)
+                Console.WriteLine($"Retrieved cart {cart.Id}");
+            else
+                Console.WriteLine($"Failed to retrieve cart");
+            var oldUser = cart.UserId;
+            cart.UserId = 1;
+            var newCart = (Cart)await cart.Update(wrapper);
+            Console.WriteLine($"Updated cart total from {oldUser} to {newCart.UserId}");
+        }
+
+        public static async Task Cart_Create(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var cart = new Cart();
+            cart.UserId = 5;
+            cart.Products.Add(new CartProduct() { ProductId = 7, Quantity = 2 });
+            cart.Products.Add(new CartProduct() { ProductId = 8, Quantity = 1 });
+            var newCart = (Cart)await cart.Create(wrapper);
+            Console.WriteLine($"Created cart with ID {newCart.Id}");
+        }
+
+        public static async Task Cart_Delete(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var iCart = new Cart();
+            await iCart.Delete(wrapper, 5);
+            Console.WriteLine($"Delete cart with ID 5");
+        }
+        #endregion
+
+        #region User CRUD tests
+
+        public static async Task User_Get(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var iUser = new User();
+            var user = (User)await iUser.Get(wrapper, 5);
+
+            if (user != null)
+                Console.WriteLine($"Retrieved user {user.Name.FirstName} {user.Name.LastName}");
+            else
+                Console.WriteLine($"Failed to retrieve usert");
+        }
+
+        public static async Task User_Update(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var iUser = new User();
+            var user = (User)await iUser.Get(wrapper, 5);
+            if (user != null)
+                Console.WriteLine($"Retrieved user {user.Name.FirstName} {user.Name.LastName}");
+            else
+                Console.WriteLine($"Failed to retrieve user");
+            var oldEmail = user.Email;
+            user.Email = "derek@yahoo.com";
+            var newUser = (User)await user.Update(wrapper);
+            Console.WriteLine($"Updated cart total from {oldEmail} to {newUser.Email}");
+        }
+
+        public static async Task User_Create(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var user = new User();
+            user.Name.FirstName = "John";
+            user.Name.LastName = "Doe";
+            user.Email = "john.doe@gmail.com";
+            user.Phone = "555-123-4141";
+
+            var newUser = (User)await user.Create(wrapper);
+            Console.WriteLine($"Created user with ID {newUser.Id}");
+        }
+
+        public static async Task User_Delete(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+            var iUser = new User();
+            await iUser.Delete(wrapper, 5);
+            Console.WriteLine($"Delete user with ID 5");
+        }
+        #endregion
     }
-
 }
-
