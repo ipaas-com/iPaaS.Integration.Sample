@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FakeStore.Data.Models;
 using Newtonsoft.Json;
+using static Integration.Constants;
 
 namespace FakeStore.Data.Interface
 {
@@ -193,5 +194,14 @@ namespace FakeStore.Data.Interface
             Console.WriteLine($"Delete user with ID 5");
         }
         #endregion
+
+        public static async Task Test_iPaaSCallWrapper(Integration.Abstract.Connection connection)
+        {
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var resp = await conn.IPaasApiCallWrapper.LookupIPaaSId_GETAsync(Integration.Data.IPaaSApi.IPaaSApiCallWrapper.EndpointURL.Customers, "5", (int)TM_MappingCollectionType.CUSTOMER, 10684);
+            Console.WriteLine($"Response from LookupIPaaSId_GETAsync for Customer 5: {resp}");
+        }
     }
 }

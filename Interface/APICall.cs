@@ -124,6 +124,9 @@ namespace FakeStore.Data.Interface
 
         private IntegrationAPIResponse HandleResponse(RestSharp.RestResponse resp, string action, string action_CustomerFacing, string scope = null, TM_MappingCollectionType mappingCollectionType = TM_MappingCollectionType.NONE)
         {
+            //If we are logging this, we want to also include how long the call took. We can find the difference between the start DT and now and include that in the success log msg
+            double millisecondsToExecute = (DateTime.Now - lastRestRequestCreateDT).TotalMilliseconds;
+
             if (resp.ErrorException != null)
             {
                 LogRequest(resp.Request, action, true, scope);
@@ -213,7 +216,7 @@ namespace FakeStore.Data.Interface
 
             LogRequest(resp.Request, action, false, scope);
             _connection.Logger.Log_ActivityTracker(string.Format("Succesful API Call to {0}", Identity.AppName), "Successful call to " + action_CustomerFacing, "Complete", (int)mappingCollectionType);
-            _connection.Logger.Log_Technical("D", string.Format("{0}CallWrapper.{1}", Identity.AppName, action), "Success");
+            _connection.Logger.Log_Technical("D", string.Format("{0}CallWrapper.{1}", Identity.AppName, action), $"Success ({millisecondsToExecute} ms)");
             _connection.Logger.Log_Technical("V", string.Format("{0}CallWrapper.{1}", Identity.AppName, action), resp.Content);
             APIResponse.action = IntegrationAPIResponse.ResponseAction.Continue;
             return APIResponse;
