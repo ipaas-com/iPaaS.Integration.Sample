@@ -1,5 +1,8 @@
 ﻿using FakeStore.Data.Interface;
 using Integration;
+using Integration.Abstract;
+using Integration.Abstract.Helpers;
+using Integration.Abstract.Model;
 using Integration.DataModels;
 using Newtonsoft.Json;
 using System;
@@ -37,7 +40,7 @@ namespace FakeStore.Data.Models
                     product.CartId = Id;
         }
 
-        public override async Task<object> Get(CallWrapper activeCallWrapper, object id)
+        public override async Task<object> Get(Interface.CallWrapper activeCallWrapper, object id)
         {
             var apiCall = new APICall(activeCallWrapper, $"/carts/" + Convert.ToString(id), $"Cart_GET(id: {id})",
                 $"LOAD Cart ({id})", typeof(Cart), activeCallWrapper?.TrackingGuid,
@@ -48,7 +51,7 @@ namespace FakeStore.Data.Models
             return output;
         }
 
-        public override async Task<object> Create(CallWrapper activeCallWrapper)
+        public override async Task<object> Create(Interface.CallWrapper activeCallWrapper)
         {
             var apiCall = new APICall(activeCallWrapper, $"/carts", $"Cart_POST(User: {UserId})",
                 $"CREATE Cart ({UserId})", typeof(Cart), activeCallWrapper?.TrackingGuid,
@@ -60,7 +63,7 @@ namespace FakeStore.Data.Models
             return output;
         }
 
-        public override async Task<object> Update(CallWrapper activeCallWrapper)
+        public override async Task<object> Update(Interface.CallWrapper activeCallWrapper)
         {
             var apiCall = new APICall(activeCallWrapper, $"/carts/{Id}", $"Cart_PUT(Id: {Id})",
                 $"UPDATE Cart ({Id})", typeof(Cart), activeCallWrapper?.TrackingGuid,
@@ -72,7 +75,7 @@ namespace FakeStore.Data.Models
             return output;
         }
 
-        public override async Task<object> Delete(CallWrapper activeCallWrapper, object _id)
+        public override async Task<object> Delete(Interface.CallWrapper activeCallWrapper, object _id)
         {
             var apiCall = new APICall(activeCallWrapper, $"/carts/{_id}", $"Cart_DELETE(Id: {_id})",
                 $"DELETE Cart ({_id})", typeof(Cart), activeCallWrapper?.TrackingGuid,
@@ -81,6 +84,13 @@ namespace FakeStore.Data.Models
             return output;
         }
 
+        public override async Task<List<BulkTransferRequest>> Poll(Interface.CallWrapper activeCallWrapper, string filter)
+        {
+            activeCallWrapper._integrationConnection.Logger.Log_Technical("D", $"{Identity.AppName}.Cart.Poll", "Call to Cart.Poll, but there is currently no functionality for this method.");
+
+            var output = new List<BulkTransferRequest>();
+            return output;
+        }
 
         public override object GetPrimaryId()
         {

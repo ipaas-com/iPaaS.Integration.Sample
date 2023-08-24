@@ -1,4 +1,5 @@
 ﻿using FakeStore.Data.Interface;
+using Integration.Abstract.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace Integration.DataModels
 
         public abstract Task<object> Delete(CallWrapper activeCallWrapper, object _id);
 
+        public abstract Task<List<BulkTransferRequest>> Poll(CallWrapper activeCallWrapper, string filter);
 
         // =====================================================
         // Use this helper function to Error on Primary Key issues

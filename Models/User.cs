@@ -1,5 +1,6 @@
 ﻿using FakeStore.Data.Interface;
 using Integration;
+using Integration.Abstract.Helpers;
 using Integration.DataModels;
 using Newtonsoft.Json;
 using System;
@@ -88,6 +89,13 @@ namespace FakeStore.Data.Models
             return output;
         }
 
+        public override async Task<List<BulkTransferRequest>> Poll(Interface.CallWrapper activeCallWrapper, string filter)
+        {
+            activeCallWrapper._integrationConnection.Logger.Log_Technical("D", $"{Identity.AppName}.User.Poll", "Call to User.Poll, but there is currently no functionality for this method.");
+
+            var output = new List<BulkTransferRequest>();
+            return output;
+        }
 
         public override object GetPrimaryId()
         {
