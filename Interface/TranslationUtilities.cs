@@ -302,6 +302,36 @@ namespace FakeStore.Data.Interface
         }
 
         /// <summary>
+        /// An optional method that allows us to poll an endpoint for changes. This is useful for integrations to systems that do not have 
+        /// webhooks to send data automatically. This method allows us to periodically request data from the external system.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="mappingCollectionType"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public new async Task<List<BulkTransferRequest>> PollRequest(Integration.Abstract.Connection connection, int mappingCollectionType, string filter)
+        {
+            List<BulkTransferRequest> response = null;
+
+            var conn = (Connection)connection;
+            var wrapper = conn.CallWrapper;
+
+            var modelObject = GetDestinationObject(connection, mappingCollectionType);
+            if (modelObject == null)
+                throw new Exception(string.Format("Call to PollRequest with unhandled parameters: System={0} {1}, sourceObject could not be created", Identity.AppName, mappingCollectionType));
+
+            if (modelObject is AbstractIntegrationData)
+            {
+                response = await ((AbstractIntegrationData)modelObject).Poll(wrapper, filter);
+                return response;
+            }
+
+            // If we make it this far and don't have a matching type, we have an error
+            throw new Exception(string.Format("Call to CollectionGet with unhandled parameters: System={0}, {1}, sourceObject type={2}", Identity.AppName, mappingCollectionType, modelObject.GetType().Name));
+        }
+
+        /// <summary>
         /// Allows an external DLL to estimate how many API calls will be needed for a each CREATE events in order to claim the slots against rate limit settings at the beginning. 
         /// Once the transfer is complete, actual API calls will be compared to the claimed API calls and will adjust the available API call limit up or down as necessary. 
         /// </summary>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FakeStore.Data.Models;
+using static Integration.Constants;
 
 namespace FakeStore.Data.Interface
 {
@@ -32,6 +33,13 @@ namespace FakeStore.Data.Interface
         private List<Scope> GetScopes()
         {
             Scopes = new List<Integration.Abstract.Model.Scope>();
+            //FakeStore does not have web hooks, so we will not have any real scopes to use. However, we can define a polling hook for products
+            Scopes.Add(new Scope() { Name = "product/poll", Description = "Poll the destination system for updated products", MappingCollectionTypeId = (int)TM_MappingCollectionType.PRODUCT, ScopeActionId = (int)ScopeAction.POLL });
+
+            //We can also define a hook for carts and users, which can be manually triggered
+            Scopes.Add(new Scope() { Name = "cart/created", Description = "Cart Created", MappingCollectionTypeId = (int)TM_MappingCollectionType.TRANSACTION, ScopeActionId = (int)ScopeAction.CREATED });
+            Scopes.Add(new Scope() { Name = "user/created", Description = "User Created", MappingCollectionTypeId = (int)TM_MappingCollectionType.CUSTOMER, ScopeActionId = (int)ScopeAction.CREATED });
+
             return Scopes;
         }
 
