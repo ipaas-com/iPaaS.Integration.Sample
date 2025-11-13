@@ -8,15 +8,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="iPaaS.Integration.SDK" Version="1.0.4-CI-20230823-185413" />
+    <PackageReference Include="iPaaS.Integration.SDK" Version="1.0.4-CI-20251103-144503" GeneratePathProperty="true">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="108.0.3" />
   </ItemGroup>
-
 </Project>
