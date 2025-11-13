@@ -280,27 +280,6 @@ namespace FakeStore.Data.Interface
             return retVal;
         }
 
-        public new async Task<List<BulkTransferRequest>> PollRequest(Integration.Abstract.Connection connection, int mappingCollectionType, string filter)
-        {
-            List<BulkTransferRequest> response = null;
-
-            var conn = (Connection)connection;
-            var wrapper = conn.CallWrapper;
-
-            var modelObject = GetDestinationObject(connection, mappingCollectionType);
-            if (modelObject == null)
-                throw new Exception(string.Format("Call to PollRequest with unhandled parameters: System={0} {1}, sourceObject could not be created", Identity.AppName, mappingCollectionType));
-
-            if (modelObject is AbstractIntegrationData)
-            {
-                response = await ((AbstractIntegrationData)modelObject).Poll(wrapper, filter);
-                return response;
-            }
-
-            // If we make it this far and don't have a matching type, we have an error
-            throw new Exception(string.Format("Call to CollectionGet with unhandled parameters: System={0}, {1}, sourceObject type={2}", Identity.AppName, mappingCollectionType, modelObject.GetType().Name));
-        }
-
         /// <summary>
         /// An optional method that allows us to poll an endpoint for changes. This is useful for integrations to systems that do not have 
         /// webhooks to send data automatically. This method allows us to periodically request data from the external system.

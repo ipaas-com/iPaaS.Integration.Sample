@@ -41,7 +41,7 @@ namespace FakeStore.Data.Interface
             _integrationClient = new RestClient(_integrationSettings.Url);
             _integrationClient.AddDefaultHeader("Content-Type", "application/json");
             _integrationClient.AddDefaultHeader("Accept", "application/json");
-            _integrationClient.UseSerializer(() => new Integration.Data.Utilities.RestSharpNewtonsoftSerializer());
+            //_integrationClient.UseSerializer(() => new Integration.Data.Utilities.RestSharpNewtonsoftSerializer());
 
             string ValidationResponse = await ValidateConnection();
 

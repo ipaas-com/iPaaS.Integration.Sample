@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FakeStore.Data.Models;
+using Integration.Abstract.Model;
 using Newtonsoft.Json;
 using static Integration.Constants;
 
@@ -28,8 +29,11 @@ namespace FakeStore.Data.Interface
             var conn = (Connection)connection;
             var wrapper = conn.CallWrapper;
 
-            var iProduct = new Product();
-            var product = (Product)await iProduct.Get(wrapper, 5);
+            var productRO = (ResponseObject)await conn.TranslationUtilities.ModelGetAsync(conn, (int)TM_MappingCollectionType.PRODUCT, 5);
+            var product = (Product)productRO.Payload;
+
+            //var iProduct = new Product();
+            //var product = (Product)await iProduct.Get(wrapper, 5);
 
             if (product != null)
                 Console.WriteLine($"Retrieved product {product.Title}");
