@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Integration.Abstract.Constants;
+using static Integration.Constants;
 
 namespace FakeStore.Data.Models
 {
@@ -130,6 +132,37 @@ namespace FakeStore.Data.Models
             Id = int.Parse(PrimaryId);
         }
 
+        public new Features GetFeatureSupport()
+        {
+
+            var retVal = new Features();
+            retVal.MappingCollectionType = (int)TM_MappingCollectionType.PRODUCT;
+            retVal.MappingDirectionId = (int)TM_MappingDirection.BIDIRECTIONAL;
+            retVal.Support = Integration.Abstract.Model.Features.SupportLevel.Full;
+            retVal.AdditionalInformation = "FakeStore Product entity supports full CRUD operations.";
+            retVal.AllowInitialization = false;
+
+            retVal.CollisionHandlingSupported = false;
+            retVal.CustomfieldSupported = false;
+            retVal.IndependentTransferSupported = true;
+            retVal.PollingSupported = true;
+            retVal.RecordMatchingSupported = false;
+            retVal.ExternalWebhookSupportId = (int)WH_ExternalSupport.LOGICAL_SUPPORT_FOR_POLLING;
+
+            retVal.SupportedEndpoints.Add(new FeatureSupportEndpoint() { Value = "/products/{Id}", Note = "" });
+
+            retVal.ExternalIdFormats.Add(new ExternalIdFormat() { RecordExternalIdFormat = "{{Id}}" });
+
+            retVal.ExternalDataTypes.Add(new FeatureSupportDataType() { Value = "Product", Note = "The Product table" });
+
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD);
+            retVal.SupportedMethods.Add((int)TM_SyncType.UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD_AND_UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE_TRIGGERED_UPDATE);
+
+            return retVal;
+        }
     }
 
     public class ProductRating

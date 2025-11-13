@@ -1,5 +1,6 @@
 ﻿using FakeStore.Data.Interface;
 using Integration.Abstract.Helpers;
+using Integration.Abstract.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,13 @@ namespace Integration.DataModels
 
         public abstract Task<List<BulkTransferRequest>> Poll(CallWrapper activeCallWrapper, string filter);
 
+        //A virtual method that can be overridden by child classes to indicate what features are supported by this data model. This can be called from the MetaData class
+        //to determine what features are supported by the data model.
+        public virtual Features GetFeatureSupport()
+        {
+            return null;
+        }
+
         // =====================================================
         // Use this helper function to Error on Primary Key issues
 
@@ -82,7 +90,6 @@ namespace Integration.DataModels
             else
                 return;
         }
-
         // =====================================================
     }
 

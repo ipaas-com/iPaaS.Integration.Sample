@@ -1,6 +1,7 @@
 ﻿using FakeStore.Data.Interface;
 using Integration;
 using Integration.Abstract.Helpers;
+using Integration.Abstract.Model;
 using Integration.DataModels;
 using Newtonsoft.Json;
 using System;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Integration.Abstract.Constants;
+using static Integration.Constants;
 
 namespace FakeStore.Data.Models
 {
@@ -106,6 +109,38 @@ namespace FakeStore.Data.Models
         {
             Id = int.Parse(PrimaryId);
         }
+
+        public new Features GetFeatureSupport()
+        {
+
+            var retVal = new Features();
+            retVal.MappingCollectionType = (int)TM_MappingCollectionType.CUSTOMER;
+            retVal.MappingDirectionId = (int)TM_MappingDirection.BIDIRECTIONAL;
+            retVal.Support = Integration.Abstract.Model.Features.SupportLevel.Full;
+            retVal.AdditionalInformation = "FakeStore User entity supports full CRUD operations.";
+            retVal.AllowInitialization = false;
+
+            retVal.CollisionHandlingSupported = false;
+            retVal.CustomfieldSupported = false;
+            retVal.IndependentTransferSupported = true;
+            retVal.PollingSupported = false;
+            retVal.RecordMatchingSupported = false;
+            retVal.ExternalWebhookSupportId = (int)WH_ExternalSupport.NONE;
+
+            retVal.SupportedEndpoints.Add(new FeatureSupportEndpoint() { Value = "/users/{Id}", Note = "" });
+
+            retVal.ExternalIdFormats.Add(new ExternalIdFormat() { RecordExternalIdFormat = "{{Id}}" });
+
+            retVal.ExternalDataTypes.Add(new FeatureSupportDataType() { Value = "User", Note = "The User table" });
+
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD);
+            retVal.SupportedMethods.Add((int)TM_SyncType.UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD_AND_UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE_TRIGGERED_UPDATE);
+
+            return retVal;
+        }
     }
 
     public class UserAddress
@@ -130,6 +165,40 @@ namespace FakeStore.Data.Models
 
         [JsonProperty("zipcode")]
         public string ZipCode { get; set; }
+
+        public Features GetFeatureSupport()
+        {
+
+            var retVal = new Features();
+            retVal.MappingCollectionType = (int)TM_MappingCollectionType.CUSTOMER_ADDRESS;
+            retVal.MappingDirectionId = (int)TM_MappingDirection.BIDIRECTIONAL;
+            retVal.Support = Integration.Abstract.Model.Features.SupportLevel.Full;
+            retVal.AdditionalInformation = "FakeStore User Address entity supports full CRUD operations.";
+            retVal.AllowInitialization = false;
+
+            retVal.CollisionHandlingSupported = false;
+            retVal.CustomfieldSupported = false;
+            retVal.IndependentTransferSupported = false; //Transfers only occur as part of User transfers
+            retVal.PollingSupported = false;
+            retVal.RecordMatchingSupported = false;
+            retVal.ExternalWebhookSupportId = (int)WH_ExternalSupport.NONE;
+
+            //No direct endpoint for addresses
+            //retVal.SupportedEndpoints.Add(new FeatureSupportEndpoint() { Value = "/users/{Id}", Note = "" });
+
+            //No unique id for addresses
+            //retVal.ExternalIdFormats.Add(new ExternalIdFormat() { RecordExternalIdFormat = "{{Id}}" });
+
+            retVal.ExternalDataTypes.Add(new FeatureSupportDataType() { Value = "User Address", Note = "The User Address object contained within the User object" });
+
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD);
+            retVal.SupportedMethods.Add((int)TM_SyncType.UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.ADD_AND_UPDATE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE);
+            retVal.SupportedMethods.Add((int)TM_SyncType.DELETE_TRIGGERED_UPDATE);
+
+            return retVal;
+        }
     }
 
     public class UserAddressGeoLocation
