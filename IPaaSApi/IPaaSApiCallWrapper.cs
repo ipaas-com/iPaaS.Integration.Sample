@@ -86,6 +86,7 @@ namespace Integration.Data.IPaaSApi
             req.RequestFormat = DataFormat.Json;
             //req.JsonSerializer = _jsonSerialser;
             req.AddHeader("Authorization", "Bearer " + _settings.IPaaSApi_Token);
+            req.AddHeader("X-Company-Id", _settings.CompanyId);
             return req;
         }
 
