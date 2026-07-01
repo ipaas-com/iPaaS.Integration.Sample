@@ -1,9 +1,3 @@
-# iPaaS.com Integration Sample
-
-This project contains examples of how to implement methods throughout your new Integration.  It should be used for reference only.
-
-It is recommended to start with a new integration project.  If you have not done so yet, please review [iPaaS.com Integration Template](https://github.com/ipaas-com/iPaaS.Integration.Template) to get started.
-
 # FakeStore POS
 ## Overview
 In order to provide a semi-real world example of how an integration will be coded, implemented, and deployed, we used the Template project as a basis to connect to a sample API that includes a simple set of endpoints. These endpoints return hardcoded data and do not have long term changes from updates, creations, or deletions. But nevertheless the API provides a useful example of what your integration project will need to include and the steps you will need to follow as you build it.
@@ -96,7 +90,7 @@ Since I didn't need it anymore, I also deleted the initial system I had created.
 
 Now that I have a valid system, I could run my DevelopmentTests. In my case, my system was created with ID 10684, so I could run these commands and confirm that they executed without errros:
 
-<pre>TEST Product_Get 10684
+TEST Product_Get 10684
 TEST Product_Update 10684
 TEST Product_Create 10684
 TEST Product_Delete 10684
@@ -109,7 +103,7 @@ TEST User_Delete 10684
 TEST Cart_Get 10684
 TEST Cart_Update 10684
 TEST Cart_Create 10684
-TEST Cart_Delete 10684</pre>
+TEST Cart_Delete 10684
 
 In my case, I did find a few errors. So I corrected them and uploaded a fresh file.
 
@@ -145,16 +139,14 @@ Finally, I defined a mapping for Transaction Lines. The Type and Status fields a
 ### Testing Hooks
 Now that I had my file complete and my mappings in place, I decided to test some data transfers. First I ran some products, using this command in the Development Utility:
 
-<pre>HOOK 10684 product/created 1 TO
+HOOK 10684 product/created 1 TO
 HOOK 10684 product/created 2 TO
-HOOK 10684 product/created 3 TO</pre>
+HOOK 10684 product/created 3 TO
 
 This told iPaaS that I wanted to send products 1, 2, and 3 in system 10684 TO iPaaS with the scope product/created. I reviewed the items in iPaaS and confirmed that the data I expected there was present.
 
 Then I sent hooks to test customers and transactions:
-
-<pre>HOOK 10684 customer/created 1 TO
-HOOK 10684 transaction/created 1 TO</pre>
+HOOK 10684 customer/created 1 TO
+HOOK 10684 transaction/created 1 TO
 
 Once I confirmed that those hooks worked correctly, I was done.
-
